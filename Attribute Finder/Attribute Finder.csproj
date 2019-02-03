@@ -118,7 +118,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enum\MessageType.cs" />
+    <Compile Include="GridViewColumnSort\PropertyComparer.cs" />
+    <Compile Include="GridViewColumnSort\SortableBindingList.cs" />
     <Compile Include="Helpers\MetaDataHelpers.cs" />
+    <Compile Include="ListViewItemCustom.cs" />
     <Compile Include="MyPlugin.cs" />
     <Compile Include="MyPluginControl.cs">
       <SubType>UserControl</SubType>
@@ -150,7 +154,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(ProjectDir)Attribute Finder.dll"  "D:\Cloud\OneDrive\Kokulan\Dynamics 365\XrmToolBox"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetDir)$(ProjectName).dll" "C:\CRM\XRM Toolbox\$(ProjectName).dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

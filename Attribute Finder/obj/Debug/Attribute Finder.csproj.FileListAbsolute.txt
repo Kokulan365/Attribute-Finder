@@ -34,3 +34,35 @@ C:\Users\Kokul\source\repos\Attribute Finder\Attribute Finder\obj\Debug\Attribut
 C:\Users\Kokul\source\repos\Attribute Finder\Attribute Finder\obj\Debug\Attribute Finder.csproj.GenerateResource.cache
 C:\Users\Kokul\source\repos\Attribute Finder\Attribute Finder\obj\Debug\AttributeFinder.MyPluginControl.resources
 C:\Users\Kokul\source\repos\Attribute Finder\Attribute Finder\obj\Debug\AttributeFinder.Properties.Resources.resources
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Attribute Finder.dll.config
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Attribute Finder.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Attribute Finder.pdb
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\McTools.Xrm.Connection.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\McTools.Xrm.Connection.WinForms.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Crm.Sdk.Proxy.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.IdentityModel.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Rest.ClientRuntime.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Web.XmlTransform.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.Deployment.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.Workflow.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Tooling.Connector.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Newtonsoft.Json.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\NuGet.Core.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\WeifenLuo.WinFormsUI.Docking.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\WeifenLuo.WinFormsUI.Docking.ThemeVS2015.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Crm.Sdk.Proxy.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.IdentityModel.Clients.ActiveDirectory.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.Deployment.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Sdk.Workflow.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\bin\Debug\Microsoft.Xrm.Tooling.Connector.xml
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\AttributeFinder.MyPluginControl.resources
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\AttributeFinder.Properties.Resources.resources
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\Attribute Finder.csproj.GenerateResource.cache
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\Attribute Finder.csproj.CoreCompileInputs.cache
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\Attribute Finder.csproj.CopyComplete
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\Attribute Finder.dll
+C:\Code\Attribute Finder\Attribute-Finder\Attribute Finder\obj\Debug\Attribute Finder.pdb

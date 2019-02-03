@@ -3,12 +3,8 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Metadata.Query;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace AttributeFinder.Helpers
 {
@@ -17,9 +13,9 @@ namespace AttributeFinder.Helpers
         private static readonly string[] EntityMetadataProperties = { "LogicalName", "DisplayName", "Attributes", "PrimaryIdAttribute", "ObjectTypeCode", "SchemaName" };
         private static readonly string[] AttributeMetadataProperties = { "DisplayName", "LogicalName", "AttributeType", "IsValidForRead", "AttributeOf", "IsCustomAttribute", "SchemaName" };
 
-        public static List<ListViewItem> LoadAttributes(IOrganizationService service)
+        public static List<AttributeViewModel> LoadAttributes(IOrganizationService service)
         {
-            List<ListViewItem> attributeCollection = new List<ListViewItem>();
+            List<AttributeViewModel> attributeCollection = new List<AttributeViewModel>();
 
             EntityQueryExpression entityQueryExpression = new EntityQueryExpression
             {
@@ -58,13 +54,13 @@ namespace AttributeFinder.Helpers
             return attributeCollection;
         }
 
-        public static List<ListViewItem> ConvertToAttributesViewModel(EntityMetadata entityMetada)
+        public static List<AttributeViewModel> ConvertToAttributesViewModel(EntityMetadata entityMetada)
         {
-            List<ListViewItem> attributes = new List<ListViewItem>();
+            List<AttributeViewModel> attributes = new List<AttributeViewModel>();
 
             foreach (var attribute in entityMetada.Attributes)
             {
-                var attributeVM = new AttributeViewModel() {
+                attributes.Add(new AttributeViewModel() {
                     DisplayName = attribute.DisplayName.UserLocalizedLabel != null
                             ? attribute.DisplayName.UserLocalizedLabel.Label
                             : "No Display Name",
@@ -75,15 +71,18 @@ namespace AttributeFinder.Helpers
         ? entityMetada.DisplayName.UserLocalizedLabel.Label
         : "N/A",
                     EntityLogicalName = entityMetada.LogicalName
-                };
+                });
 
-                var item =  new ListViewItem(attributeVM.DisplayName);
-                item.SubItems.Add(attribute.LogicalName);
-                item.SubItems.Add(attributeVM.AttributeType);
-                item.SubItems.Add(attributeVM.EntityDisplayName);
-                item.SubItems.Add(attributeVM.EntityLogicalName);
-                item.Tag = attributeVM;
-                attributes.Add(item);
+                
+                //var item =  new ListViewItemCustom(attributeVM.DisplayName);
+                //item.SubItems.Add(attribute.LogicalName);
+                //item.SubItems.Add(attributeVM.AttributeType);
+                //item.SubItems.Add(attributeVM.EntityDisplayName);
+                //item.SubItems.Add(attributeVM.EntityLogicalName);
+                //item.Tag = attributeVM;
+                //item.EntityDisplayName = attributeVM.EntityDisplayName;
+                //item.AttributeLogicalName = attributeVM.LogicalName;
+                //attributes.Add(item);
             }
 
             return attributes;
@@ -159,5 +158,4 @@ namespace AttributeFinder.Helpers
         //    return attributes.Where(a => a.LogicalName == attributeName).FirstOrDefault();
         //}
     }
-
 }

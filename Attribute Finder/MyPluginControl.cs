@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using XrmToolBox.Extensibility;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Sdk;
+﻿using AttributeFinder.Enum;
+using AttributeFinder.GridViewColumnSort;
+using AttributeFinder.Model;
 using McTools.Xrm.Connection;
 using Microsoft.Crm.Sdk.Messages;
-using AttributeFinder.Model;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Args;
 
 namespace AttributeFinder
@@ -21,7 +21,8 @@ namespace AttributeFinder
     {
         private Settings mySettings;
 
-        private readonly List<ListViewItem> fullListOfAttributes = new List<ListViewItem>();
+        private readonly List<AttributeViewModel> fullListOfAttributes = new List<AttributeViewModel>();
+
 
         public MyPluginControl()
         {
@@ -37,6 +38,11 @@ namespace AttributeFinder
             //ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
             ExecuteMethod(WhoAmI);
+
+         
+
+
+
 
             // Loads or creates the settings for the plugin
             if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
@@ -130,11 +136,15 @@ namespace AttributeFinder
 
         public void LoadAttributes()
         {
+
+            fullListOfAttributes.Clear(); // Clear all the existing ones
             lvAttributes.Items.Clear();
             lvAttributes.Enabled = false;
             tsbClose.Enabled = false;
             tsbLoadAttributes.Enabled = false;
+            gwAttributes.Enabled = false;
 
+            DisplayMessageCentralPanel(MessageType.Infor, "Loading attributes from Dynamics 365. Please wait...");
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Loading attributes please wait...",
@@ -150,7 +160,11 @@ namespace AttributeFinder
                     }
 
                     //var items = new List<ListViewItem>();
-                    fullListOfAttributes.AddRange((List<ListViewItem>)e.Result);
+                    fullListOfAttributes.AddRange((List<AttributeViewModel>)e.Result);
+
+                    cbxListEntities.DataSource =  fullListOfAttributes.Select(x => x.EntityLogicalName).Distinct().OrderBy(y  => y).ToList();
+                    cbxListAttributeTypes.DataSource =
+                        fullListOfAttributes.Select(x => x.AttributeType).Distinct().OrderBy(y =>  y).ToList();
 
                     //foreach (var emd in items)
                     //{
@@ -172,11 +186,16 @@ namespace AttributeFinder
                     //    }
                     //}
 
-                    MessageBox.Show("Total number of Items : " + fullListOfAttributes.Count);
+                    txtSearch.Enabled = true;
+                    DisplayMessageCentralPanel(MessageType.Infor,
+                        $"Attributes have been loaded successfully. {Environment.NewLine} {Environment.NewLine} Found total of {fullListOfAttributes.Count} attributes. {Environment.NewLine} {Environment.NewLine} Please use the Search Atribute field to find attributes you are looking for.");
 
+                    gwAttributes.DataSource = fullListOfAttributes;
+                    gwAttributes.Refresh();
+                    gwAttributes.Enabled = true;
 
-                    lvAttributes.Items.AddRange(fullListOfAttributes.ToArray());
-                    lvAttributes.Enabled = true;
+                    //lvAttributes.Items.AddRange(fullListOfAttributes.ToArray());
+                    //lvAttributes.Enabled = true;
                     tsbClose.Enabled = true;
                     tsbLoadAttributes.Enabled = true;
                 },
@@ -195,23 +214,54 @@ namespace AttributeFinder
            // lvEntities.SelectedIndexChanged += lvEntities_SelectedIndexChanged;
         }
 
-        private void txtSearch_Enter(object sender, EventArgs e)
+        private void BindAttributes(List<AttributeViewModel> argListAttributes)
         {
-            lvAttributes.Items.Clear();
+            SortableBindingList<AttributeViewModel> listAttributes = new SortableBindingList<AttributeViewModel>(argListAttributes);
 
-            if (txtSearch.Text.Length == 0)
+            gwAttributes.DataSource = listAttributes;
+
+            gwAttributes.RowsDefaultCellStyle.BackColor = Color.FromArgb(152, 189, 249);
+            gwAttributes.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(221, 235, 244);
+
+            foreach (DataGridViewColumn column in gwAttributes.Columns)
             {
-                lvAttributes.Items.AddRange(fullListOfAttributes.ToArray());
+                column.Width = 200;
+                column.SortMode = DataGridViewColumnSortMode.Automatic;
             }
+            gwAttributes.Refresh();
+            lblMessage.Visible = false;
+            gwAttributes.Visible = true;
+
+            txtSearch.Focus();
+        }
+
+        //private void txtSearch_Enter(object sender, EventArgs e)
+        //{
+        //    gwAttributes.DataSource = null;
+        //    gwAttributes.Refresh();
+
+        //    if (txtSearch.Text.Length == 0)
+        //    {
+        //        BindAttributes(fullListOfAttributes);
+        //    }
+        //    else
+        //    {
+        //       BindAttributes(fullListOfAttributes.Where(i => (i.LogicalName.IndexOf(txtSearch.Text.ToLower(), StringComparison.Ordinal) >= 0)).ToList());
+        //    }
+        //}
+
+        private void DisplayMessageCentralPanel(MessageType type, string Mesage)
+        {
+            gwAttributes.Visible = false;
+            lblMessage.Visible = true;
+            lblMessage.Text = Mesage;
+            if (type == MessageType.Success)
+                lblMessage.ForeColor = Color.DarkGreen;
+            else if (type == MessageType.Error)
+                lblMessage.ForeColor = Color.DarkRed;
             else
             {
-                lvAttributes.Items.AddRange(fullListOfAttributes
-                    .Where(i => ((AttributeViewModel)i.Tag).LogicalName.IndexOf(txtSearch.Text.ToLower()) >= 0).ToArray());
-
-                //lvAttributes.Items.AddRange(fullListOfAttributes
-                //    .Where(i => ((AttributeViewModel)i.Tag).LogicalName.IndexOf(txtSearch.Text.ToLower()) >= 0
-                //                || ((AttributeViewModel)i.Tag).DisplayName.IndexOf(txtSearch
-                //                    .Text.ToLower()) >= 0).ToArray());
+                lblMessage.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             }
         }
 
@@ -226,31 +276,61 @@ namespace AttributeFinder
 
                 if (txtSearch.Text.Length == 0)
                 {
-                    lvAttributes.Items.AddRange(fullListOfAttributes.ToArray());
+                    BindAttributes(fullListOfAttributes);
                 }
                 else
                 {
+
+                    var searchTerms = txtSearch.Text.ToLower().Replace("*", ".*");
                     var itemsFound = fullListOfAttributes
-                        .Where(i => ((AttributeViewModel)i.Tag).LogicalName.IndexOf(txtSearch.Text.ToLower()) >= 0).ToArray();
+                        .Where(i => Regex.IsMatch(i.LogicalName, searchTerms)).ToList();
 
                     if (itemsFound.Any())
                     {
-                        lvAttributes.Items.AddRange(itemsFound);
+                        // Order the items by Entity Display name
+                        var orderedItems = itemsFound.OrderBy(x =>x.EntityDisplayName).ToList();
+                        BindAttributes(orderedItems);
                     }
                     else
                     {
-                        MessageBox.Show($"No attributes found with the search term : {txtSearch.Text}");
-
+                        DisplayMessageCentralPanel(MessageType.Infor,
+                            $"No attributes found with the search term : {txtSearch.Text}. {Environment.NewLine} {Environment.NewLine} Please change your search terms and try again.");
                     }
-
-
                     //lvAttributes.Items.AddRange(fullListOfAttributes
                     //    .Where(i => ((AttributeViewModel)i.Tag).LogicalName.IndexOf(txtSearch.Text.ToLower()) >= 0
                     //                || ((AttributeViewModel)i.Tag).DisplayName.IndexOf(txtSearch
                     //                    .Text.ToLower()) >= 0).ToArray());
                 }
-
             }
+        }
+
+        private void lvAttributes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbxFilterByEntity_CheckedChanged(object sender, EventArgs e)
+        {
+            cbxListEntities.Enabled = cbxEnableEntityFiltering.Checked;
+            cbxEnableEntityPrefixFiltering.Enabled = cbxEnableEntityFiltering.Checked;
+            grbFilterEntities.Enabled = cbxEnableEntityFiltering.Checked;
+        }
+
+        private void cbxEnableAttributeFiltering_CheckedChanged(object sender, EventArgs e)
+        {
+            cbxListAttributeTypes.Enabled = cbxEnableAttributeFiltering.Checked;
+            cbxEnableAttributePrefixFilter.Enabled = cbxEnableAttributeFiltering.Checked;
+            grbFilterAttributes.Enabled = cbxEnableAttributeFiltering.Checked;
+        }
+
+        private void cbxEnableEntityPrefixFiltering_CheckedChanged(object sender, EventArgs e)
+        {
+            txtEntityPrefixFilter.Enabled = cbxEnableEntityPrefixFiltering.Checked;
+        }
+
+        private void cbxEnableAttributePrefixFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            txtAttributePrefixFilter.Enabled = cbxEnableAttributePrefixFilter.Checked;
         }
     }
 }
